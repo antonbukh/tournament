@@ -1,0 +1,275 @@
+<h1><span class="zf-green">Teams</span></h1>
+<?php
+if($this->teams){?>
+<div class="row">
+	<div class="col-md-6">
+		<table class="table">
+			<tr>
+				<th>ID</th>
+				<th>Team</th>
+				<th>Group</th>
+			</tr>
+
+		<?foreach($this->teams as $r)
+			if($r->group=="A"){?>
+			<tr>
+				<td><?=$this->escapeHtml($r->id)?></td>
+				<td><?=$this->escapeHtml($r->name)?></td>
+				<td><?=$this->escapeHtml($r->group)?></td>
+			</tr>
+		<?}?>
+		</table>
+	</div>
+	<div class="col-md-6">
+		<table class="table">
+			<tr>
+				<th>ID</th>
+				<th>Team</th>
+				<th>Group</th>
+			</tr>
+
+		<?foreach($teams as $r)
+			if($r->group=="B"){?>
+			<tr>
+				<td><?=$this->escapeHtml($r->id)?></td>
+				<td><?=$this->escapeHtml($r->name)?></td>
+				<td><?=$this->escapeHtml($r->group)?></td>
+			</tr>
+		<?}?>
+		</table>
+	</div>
+</div>
+<?php }else{?>
+	<a href="<?=$this->url("application",["action"=>"teams"])?>" class="btn btn-primary">Generate teams</a>
+<?php }?>
+
+<h1><span class="zf-green">Matches</span></h1>
+<?php
+if($this->matches){?>
+	<div class="row">
+		<div class="col-md-3">
+			<table class="table">
+				<tr>
+					<th>ID</th>
+					<th>Group</th>
+					<th>Team-1</th>
+					<th>Team-2</th>
+					<th>Score</th>
+				</tr>
+				<?php 
+				$i=0;
+				foreach($this->matches as $r) {
+					$i++;
+					$t1=null;
+					$t2=null;
+					foreach($this->teams as $t) 
+					{
+						$t1=$t->id==$r->team_a?$t:$t1;
+						$t2=$t->id==$r->team_b?$t:$t2;
+					}
+					?>
+					<tr>
+						<td><?=$r->id?></td>
+						<td><?=$t1?$t1->group:""?></td>
+						<td nowrap><?=$t1?$t1->name:""?></td>
+						<td nowrap><?=$t2?$t2->name:""?></td>
+						<td nowrap><?=$r->score_a?>:<?=$r->score_b?></td>
+					</tr>
+					<?php if($i%14==0&&$this->matches[count($this->matches)-1]!=$r){?>
+					</table>
+				</div>
+				<div class="col-md-3">
+					<table class="table">
+						<tr>
+							<th>ID</th>
+							<th>Group</th>
+							<th>Team-1</th>
+							<th>Team-2</th>
+							<th>Score</th>
+						</tr>
+						<?php 
+					}
+				}?>
+			</table>
+		</div>
+	</div>
+
+	<h2>Group Results</h2>
+	<div class="row">
+		<div class="col-md-3">
+			<table class="table">
+				<tr>
+					<th>Name</th>
+					<th>Group</th>
+					<th>Score</th>
+				</tr>
+				<?php 
+				$i=0;
+				foreach($this->teams as $r) {
+					$i++;
+					$score=0;
+					foreach($this->matches as $t) 
+					{
+						$score+=$r->id==$t->team_a?$t->score_a:0;
+						$score+=$r->id==$t->team_b?$t->score_b:0;
+					}
+					?>
+					<tr>
+						<td><?=$r->name?></td>
+						<td><?=$r->group?></td>
+						<td><?=$score?></td>
+					</tr>
+					<?php if($i%4==0&&$this->teams[count($this->teams)-1]!=$r){?>
+					</table>
+				</div>
+				<div class="col-md-3">
+					<table class="table">
+						<tr>
+							<th>Name</th>
+							<th>Group</th>
+							<th>Score</th>
+						</tr>
+						<?php 
+					}
+				}?>
+			</table>
+		</div>
+	</div>
+<?php }else {?>
+	<a href="<?=$this->url("application",["action"=>"matches"])?>" class="btn btn-primary">Generate matches</a>
+<?php }?>
+
+<h1><span class="zf-green">Play Off</span></h1>
+<?php
+if($this->prePlayOff){?>
+	<div class="row">
+		<?php 
+		foreach($this->prePlayOff as $r) {
+			$t1=null;
+			$t2=null;
+			foreach($this->teams as $t) 
+			{
+				$t1=$t->id==$r->team_a?$t:$t1;
+				$t2=$t->id==$r->team_b?$t:$t2;
+			}
+			?>
+			<div class="col-md-3">
+				<table class="table">
+					<tr>
+						<th>ID</th>
+						<th>Team-1</th>
+						<th>Team-2</th>
+						<th>Score</th>
+					</tr>
+					<tr>
+						<td><?=$r->id?></td>
+						<td nowrap><?=$t1->name?></td>
+						<td nowrap><?=$t2->name?></td>
+						<td nowrap><?=$r->score_a?>:<?=$r->score_b?></td>
+					</tr>
+				</table>
+			</div>
+		<?php }?>
+	</div>
+<?php }
+
+if($this->playOff){?>
+	<div class="row">
+		<?php 
+		foreach($this->playOff as $r) {
+			$t1=null;
+			$t2=null;
+			foreach($this->teams as $t) 
+			{
+				$t1=$t->id==$r->team_a?$t:$t1;
+				$t2=$t->id==$r->team_b?$t:$t2;
+			}
+			?>
+			<div class="col-md-6">
+				<table class="table">
+					<tr>
+						<th>ID</th>
+						<th>Team-1</th>
+						<th>Team-2</th>
+						<th>Score</th>
+					</tr>
+					<tr>
+						<td><?=$r->id?></td>
+						<td nowrap><?=$t1->name?></td>
+						<td nowrap><?=$t2->name?></td>
+						<td nowrap><?=$r->score_a?>:<?=$r->score_b?></td>
+					</tr>
+				</table>
+			</div>
+		<?php }?>
+	</div>
+<?php }else {?>
+	<a href="<?=$this->url("application",["action"=>"playoff"])?>" class="btn btn-primary">Generate playoff</a>
+<?php }?>
+
+<h1><span class="zf-green">Final</span></h1>
+<?php
+if($this->final){?>
+	<div class="row">
+		<?php 
+		foreach($this->final as $r) {
+			$t1=null;
+			$t2=null;
+			foreach($this->teams as $t) 
+			{
+				$t1=$t->id==$r->team_a?$t:$t1;
+				$t2=$t->id==$r->team_b?$t:$t2;
+			}
+			?>
+			<div class="col-md-12">
+				<table class="table">
+					<tr>
+						<th>ID</th>
+						<th>Team-1</th>
+						<th>Team-2</th>
+						<th>Score</th>
+					</tr>
+					<tr>
+						<td><?=$r->id?></td>
+						<td nowrap><?=$t1->name?></td>
+						<td nowrap><?=$t2->name?></td>
+						<td nowrap><?=$r->score_a?>:<?=$r->score_b?></td>
+					</tr>
+				</table>
+			</div>
+		<?php }?>
+	</div>
+<?php }else {?>
+	<a href="<?=$this->url("application",["action"=>"final"])?>" class="btn btn-primary">Generate final</a>
+<?php }?>
+
+<h1><span class="zf-green">Winner</span></h1>
+<?php
+if($this->winner){?>
+	<div class="row">
+		<?php 
+		foreach($this->winner as $r) {
+			$t1=null;
+			foreach($this->teams as $t) 
+			{
+				$t1=$t->id==$r->team_a?$t:$t1;
+			}
+			?>
+			<div class="col-md-12">
+				<table class="table">
+					<tr>
+						<th>ID</th>
+						<th>Team</th>
+						<th>Score</th>
+					</tr>
+					<tr>
+						<td><?=$r->id?></td>
+						<td nowrap><?=$t1->name?></td>
+						<td nowrap><?=$r->score_a?></td>
+					</tr>
+				</table>
+			</div>
+		<?php }?>
+	</div>
+<?php }?>	
+</div>
